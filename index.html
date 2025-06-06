@@ -10,7 +10,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'hh');
+      gtag('config', 'hh'); // It's recommended to use your actual GA ID here, not 'hh'
     </script>
     
     <style>
@@ -50,8 +50,8 @@
             width: 200px;
             height: 200px;
             background: radial-gradient(ellipse at center,
-                        rgba(255, 255, 150, 0.4) 0%,
-                        rgba(255, 255, 150, 0) 70%);
+                                rgba(255, 255, 150, 0.4) 0%,
+                                rgba(255, 255, 150, 0) 70%);
             border-radius: 50%;
             z-index: 1;
             animation: sunPulse 3s infinite alternate;
@@ -89,8 +89,8 @@
             width: 20px;
             height: 20px;
             background: radial-gradient(circle,
-                        rgba(255, 255, 180, 0.8) 0%,
-                        rgba(255, 255, 180, 0) 70%);
+                                rgba(255, 255, 180, 0.8) 0%,
+                                rgba(255, 255, 180, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -147,8 +147,11 @@
     </div>
 
     <script>
-        // Use raw GitHub URLs for images
-        const repoUrl = 'https://github.com/shaarrru/faizaaaa/raw/main/';
+        // Use your GitHub Pages URL for images
+        // IMPORTANT: Replace 'shaarrru.github.io/faizaaaa/' with your actual GitHub Pages URL
+        // Example: If your repo is 'username/my-repo', the URL would be 'username.github.io/my-repo/'
+        const repoUrl = 'https://shaarrru.github.io/faizaaaa/'; // <<< THIS IS THE KEY CHANGE
+
         const imageSets = {
             right: [
                 repoUrl + 'right1.JPG',
@@ -209,7 +212,8 @@
                 }, 1000);
             }).catch(error => {
                 console.error("Error loading images:", error);
-                container.style.backgroundColor = "#5a7247";
+                // Fallback background color if images fail to load
+                container.style.backgroundColor = "#5a7247"; 
             });
         });
         
@@ -239,6 +243,7 @@
                 promptText.style.display = 'none';
             }, 500);
             
+            // Inject new style for sunPulse animation on first interaction
             const style = document.createElement('style');
             style.innerHTML = `
                 .game-container.started::before {
@@ -264,7 +269,7 @@
                 }
             }, 2000);
             
-            handleInteraction();
+            handleInteraction(); // Trigger first prompt message
         }
         
         function handleInteraction() {
@@ -289,14 +294,16 @@
                 newPrompt.style.fontSize = '0.8em';
                 newPrompt.style.marginBottom = '10px';
                 
+                // Insert the new prompt after the eid-text element
                 eidText.parentNode.insertBefore(newPrompt, eidText.nextSibling);
                 
                 setTimeout(() => {
                     newPrompt.style.opacity = 1;
-                }, 50);
+                }, 50); // Small delay to ensure render for transition
                 
                 currentPrompt++;
                 
+                // If all prompts shown, start hiding them after a delay
                 if (currentPrompt >= prompts.length) {
                     setTimeout(() => {
                         const promptsToRemove = document.querySelectorAll('.game-overlay-text:not(.eid-text)');
@@ -304,22 +311,24 @@
                             prompt.style.opacity = 0;
                             setTimeout(() => prompt.remove(), 500);
                         });
-                    }, 3000);
+                    }, 3000); // Hide prompts 3 seconds after the last one is displayed
                 }
             } else {
-                currentPrompt = 0;
-                handleInteraction();
+                currentPrompt = 0; // Loop back to the first prompt
+                handleInteraction(); // Show the first prompt again
             }
             
+            // Temporarily remove event listeners to prevent rapid triggering
             document.removeEventListener('touchstart', handleInteraction);
             document.removeEventListener('keydown', handleInteraction);
             document.removeEventListener('click', handleInteraction);
             
+            // Re-add event listeners after a short delay
             setTimeout(() => {
                 document.addEventListener('touchstart', handleInteraction);
                 document.addEventListener('keydown', handleInteraction);
                 document.addEventListener('click', handleInteraction);
-            }, 500);
+            }, 500); // Delay to prevent multiple rapid clicks/taps
         }
         
         function preloadAllImages() {
@@ -333,7 +342,7 @@
                     };
                     image.onerror = () => {
                         console.error("Failed to load image:", img);
-                        resolve();
+                        resolve(); // Resolve even on error to not block other images
                     };
                     image.src = img;
                 });
@@ -342,7 +351,7 @@
         }
         
         function startGardenAnimation() {
-            if (!imagesLoaded) return;
+            if (!imagesLoaded) return; // Only start if images are preloaded
             animateGarden();
         }
         
@@ -350,17 +359,17 @@
             if (isPaused || !imagesLoaded || !animationStarted) return;
             
             const container = document.querySelector('.game-container');
-            const randomPause = 1500 + Math.random() * 1000;
+            const randomPause = 1500 + Math.random() * 1000; // Pause between animation cycles
             
             if (animationState === 'right') {
                 currentImageIndex++;
                 if (currentImageIndex < imageSets.right.length) {
                     setBackgroundSafe(container, imageSets.right[currentImageIndex]);
-                    animationTimeout = setTimeout(animateGarden, 500);
+                    animationTimeout = setTimeout(animateGarden, 500); // Frame duration
                 } else {
                     animationState = 'return-right';
-                    currentImageIndex = imageSets.right.length - 2;
-                    isPaused = true;
+                    currentImageIndex = imageSets.right.length - 2; // Start returning from second to last
+                    isPaused = true; // Pause before returning
                     animationTimeout = setTimeout(() => {
                         isPaused = false;
                         animateGarden();
@@ -373,12 +382,12 @@
                     setBackgroundSafe(container, imageSets.right[currentImageIndex]);
                     animationTimeout = setTimeout(animateGarden, 500);
                 } else {
-                    animationState = 'left';
+                    animationState = 'left'; // Switch to left animation
                     currentImageIndex = 0;
-                    isPaused = true;
+                    isPaused = true; // Pause before starting left animation
                     animationTimeout = setTimeout(() => {
                         isPaused = false;
-                        setBackgroundSafe(container, imageSets.left[0]);
+                        setBackgroundSafe(container, imageSets.left[0]); // Ensure correct starting image for left
                         animateGarden();
                     }, randomPause);
                 }
@@ -404,20 +413,21 @@
                     setBackgroundSafe(container, imageSets.left[currentImageIndex]);
                     animationTimeout = setTimeout(animateGarden, 500);
                 } else {
-                    animationState = 'right';
+                    animationState = 'right'; // Loop back to right animation
                     currentImageIndex = 0;
                     isPaused = true;
                     animationTimeout = setTimeout(() => {
                         isPaused = false;
-                        setBackgroundSafe(container, imageSets.right[0]);
+                        setBackgroundSafe(container, imageSets.right[0]); // Ensure correct starting image for right
                         animateGarden();
                     }, randomPause);
                 }
             }
             else if (animationState === 'center') {
+                // Initial state, transition to first animation (right)
                 animationState = 'right';
                 currentImageIndex = 0;
-                setBackgroundSafe(container, imageSets.right[0]);
+                setBackgroundSafe(container, imageSets.right[0]); // Start with the first right image
                 animateGarden();
             }
         }
@@ -426,18 +436,19 @@
             if (loadedImages[imageName]) {
                 container.style.backgroundImage = `url('${imageName}')`;
             } else {
-                console.warn("Image not loaded:", imageName);
-                container.style.backgroundColor = "#5a7247";
+                console.warn("Image not loaded (or failed to load earlier):", imageName);
+                // Fallback to a solid color if an individual image isn't loaded
+                container.style.backgroundColor = "#5a7247"; 
             }
         }
         
         function createFirefly(container) {
-            if (!animationStarted) return;
+            if (!animationStarted) return; // Only create fireflies after animation starts
             
             const firefly = document.createElement('div');
             firefly.className = 'firefly';
             
-            const startSide = Math.floor(Math.random() * 4);
+            const startSide = Math.floor(Math.random() * 4); // 0:top, 1:right, 2:bottom, 3:left
             let startX, startY;
             
             switch(startSide) {
@@ -450,17 +461,18 @@
             firefly.style.left = `${startX}%`;
             firefly.style.top = `${startY}%`;
             
-            const size = 3 + Math.random() * 5;
+            const size = 3 + Math.random() * 5; // Random size for variation
             firefly.style.width = `${size}px`;
             firefly.style.height = `${size}px`;
-            firefly.style.filter = `blur(1px) brightness(${0.7 + Math.random() * 0.5})`;
+            firefly.style.filter = `blur(1px) brightness(${0.7 + Math.random() * 0.5})`; // Subtle glow/flicker effect
             
             container.appendChild(firefly);
             animateFirefly(firefly);
         }
         
         function animateFirefly(firefly) {
-            const duration = 20 + Math.random() * 40;
+            const duration = 20 + Math.random() * 40; // Total duration in seconds
+            // Fade in the firefly, then start its movement
             fadeIn(firefly, () => {
                 moveFirefly(firefly, duration);
             });
@@ -471,30 +483,33 @@
             const startY = parseFloat(firefly.style.top);
             
             const path = [];
-            const segments = 4 + Math.floor(Math.random() * 3);
-            path.push({ x: startX, y: startY });
+            const segments = 4 + Math.floor(Math.random() * 3); // Number of intermediate points
+            path.push({ x: startX, y: startY }); // Add starting point
             
             for (let i = 1; i <= segments; i++) {
-                const centerPull = 0.3 + Math.random() * 0.4;
+                const centerPull = 0.3 + Math.random() * 0.4; // Tendency to move towards center
                 const prevPoint = path[i-1];
                 
-                const x = prevPoint.x + (50 - prevPoint.x) * centerPull + (Math.random() * 40 - 20);
+                // Calculate next point, pulling towards center with some randomness
+                const x = prevPoint.x + (50 - prevPoint.x) * centerPull + (Math.random() * 40 - 20); // Random offset for organic movement
                 const y = prevPoint.y + (50 - prevPoint.y) * centerPull + (Math.random() * 30 - 15);
                 
                 path.push({
-                    x: Math.max(-20, Math.min(120, x)),
+                    x: Math.max(-20, Math.min(120, x)), // Keep points somewhat within bounds
                     y: Math.max(-20, Math.min(120, y))
                 });
             }
             
+            // Add a final point to ensure the firefly exits the screen
             const lastPoint = path[path.length-1];
             let exitX, exitY;
             
-            if (lastPoint.x < 0 || lastPoint.x > 100) {
+            // Determine exit side based on last point
+            if (lastPoint.x < 0 || lastPoint.x > 100) { // If near horizontal edge
                 exitX = lastPoint.x < 50 ? -20 : 120;
-                exitY = 20 + Math.random() * 60;
-            } else {
-                exitX = 20 + Math.random() * 60;
+                exitY = 20 + Math.random() * 60; // Exit somewhere vertically
+            } else { // If near vertical edge
+                exitX = 20 + Math.random() * 60; // Exit somewhere horizontally
                 exitY = lastPoint.y < 50 ? -20 : 120;
             }
             
@@ -503,11 +518,12 @@
             const startTime = Date.now();
             
             function updatePosition() {
-                const elapsed = (Date.now() - startTime) / 1000;
+                const elapsed = (Date.now() - startTime) / 1000; // Elapsed time in seconds
                 const progress = Math.min(elapsed / duration, 1);
                 
                 if (progress >= 1) {
-                    if (Math.random() > 0.3) {
+                    // Decide whether to restart or fade out and remove
+                    if (Math.random() > 0.3) { // 70% chance to restart
                         restartFirefly(firefly);
                     } else {
                         fadeOut(firefly, () => {
@@ -523,10 +539,11 @@
                 firefly.style.left = `${point.x}%`;
                 firefly.style.top = `${point.y}%`;
                 
-                if (Math.random() > 0.95) {
+                // Random flickering effect for fireflies
+                if (Math.random() > 0.95) { // 5% chance to flicker
                     const flickerOpacity = 0.4 + Math.random() * 0.6;
                     firefly.style.opacity = flickerOpacity;
-                    setTimeout(() => { firefly.style.opacity = 1; }, 100);
+                    setTimeout(() => { firefly.style.opacity = 1; }, 100); // Quick flicker back to full opacity
                 }
                 
                 requestAnimationFrame(updatePosition);
@@ -535,17 +552,19 @@
             updatePosition();
         }
         
+        // Catmull-Rom spline interpolation for smooth path
         function getPointOnPath(path, progress) {
             const exactIndex = progress * (path.length - 1);
             const index = Math.floor(exactIndex);
             const fraction = exactIndex - index;
             
-            if (index >= path.length - 1) return path[path.length - 1];
+            if (index >= path.length - 1) return path[path.length - 1]; // Ensure we don't go out of bounds
             
+            // Get 4 points for cubic interpolation
             const p0 = index > 0 ? path[index - 1] : path[index];
             const p1 = path[index];
             const p2 = path[index + 1];
-            const p3 = index < path.length - 2 ? path[index + 2] : p2;
+            const p3 = index < path.length - 2 ? path[index + 2] : p2; // Handle end points
             
             return {
                 x: cubicInterpolate(p0.x, p1.x, p2.x, p3.x, fraction),
@@ -553,6 +572,7 @@
             };
         }
         
+        // Cubic interpolation function
         function cubicInterpolate(p0, p1, p2, p3, t) {
             const t2 = t * t;
             const t3 = t2 * t;
@@ -564,6 +584,7 @@
         }
         
         function restartFirefly(firefly) {
+            // Re-randomize starting position and animate again
             const startSide = Math.floor(Math.random() * 4);
             let startX, startY;
             
@@ -576,17 +597,18 @@
             
             firefly.style.left = `${startX}%`;
             firefly.style.top = `${startY}%`;
-            animateFirefly(firefly);
+            animateFirefly(firefly); // Start new animation cycle
         }
         
+        // Generic fade-in utility
         function fadeIn(element, callback) {
-            const duration = 800 + Math.random() * 1200;
+            const duration = 800 + Math.random() * 1200; // Random fade duration
             const startTime = Date.now();
             
             function update() {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = 1 - Math.pow(1 - progress, 2);
+                const easedProgress = 1 - Math.pow(1 - progress, 2); // Ease-out effect
                 element.style.opacity = easedProgress;
                 
                 if (progress < 1) {
@@ -598,14 +620,15 @@
             update();
         }
         
+        // Generic fade-out utility
         function fadeOut(element, callback) {
-            const duration = 500 + Math.random() * 1000;
+            const duration = 500 + Math.random() * 1000; // Random fade duration
             const startTime = Date.now();
             
             function update() {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = Math.pow(progress, 2);
+                const easedProgress = Math.pow(progress, 2); // Ease-in effect
                 element.style.opacity = 1 - easedProgress;
                 
                 if (progress < 1) {
